@@ -12,6 +12,11 @@ var server = http.createServer(function(req, res) {
   }
 
   req.on('end', function() {
+    if(body.indexOf('payload') == 0) {
+      body = body.slice('payload='.length);
+      body = decodeURIComponent(body);
+    }
+
     if(body[0] != '{') {
       console.log("NOT JSON! " + body);
       res.writeHead(500, {});
