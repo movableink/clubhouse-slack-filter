@@ -14,7 +14,7 @@ var server = http.createServer(function(req, res) {
   req.on('end', function() {
     if(body.indexOf('payload') == 0) {
       body = body.slice('payload='.length);
-      body = decodeURIComponent(body);
+      body = decodeURIComponent(body.replace(/\+/, ' '));
     }
 
     if(body[0] != '{') {
