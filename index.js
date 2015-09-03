@@ -31,7 +31,7 @@ var server = http.createServer(function(req, res) {
 
       console.log("Posting to clubhouse: " + payload.text);
       request.post(process.env.SLACK_HOOK_URL, {
-        body: JSON.encode(payload)
+        body: JSON.stringify(payload)
       }, function(err, httpResponse, body) {
         if(err) {
           console.log(err);
