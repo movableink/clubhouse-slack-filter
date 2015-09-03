@@ -8,7 +8,7 @@ var server = http.createServer(function(req, res) {
   });
 
   function isAgileDeploy(msg) {
-    return (msg.indexOf('[agileEMAIL]') == 0) && msg.match(/Deploy/);
+    return (msg.indexOf('[agileEMAIL]') == 0) && msg.match(/to Done/);
   }
 
   req.on('end', function() {
@@ -29,7 +29,7 @@ var server = http.createServer(function(req, res) {
     if(isAgileDeploy(payload.text)) {
       console.log("Posting to clubhouse: " + payload.text);
       request.post(process.env.SLACK_HOOK_URL, {
-        form: {payload: body}
+        body: body
       }, function(err, httpResponse, body) {
         if(err) {
           console.log(err);
