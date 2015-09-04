@@ -5,7 +5,7 @@ var messageMatch = process.env.CLUBHOUSE_MESSAGE_REGEX || ".*";
 var embellishment = process.env.EMBELLISHMENT || "|MESSAGE|";
 
 function matchesMessage(msg) {
-  return msg.match();
+  return msg.match(messageMatch);
 }
 
 var server = http.createServer(function(req, res) {
