@@ -1,15 +1,18 @@
 var http = require('http');
 var request = require('request');
 
+var messageMatch = process.env.CLUBHOUSE_MESSAGE_REGEX || ".*";
+var embellishment = process.env.EMBELLISHMENT || "|MESSAGE|";
+
+function matchesMessage(msg) {
+  return msg.match();
+}
+
 var server = http.createServer(function(req, res) {
   var body = '';
   req.on('data', function(chunk) {
     body += chunk;
   });
-
-  function isAgileDeploy(msg) {
-    return (msg.indexOf('[agileEMAIL]') == 0) && msg.match(/to Done/);
-  }
 
   req.on('end', function() {
     if(body.indexOf('payload') == 0) {
@@ -26,8 +29,8 @@ var server = http.createServer(function(req, res) {
 
     var payload = JSON.parse(body);
 
-    if(isAgileDeploy(payload.text)) {
-      payload.text = ":tada: " + payload.text + " :tada:";
+    if(matchesMessage(payload.text)) {
+      payload.text = embellishment.replace(/\|MESSAGE\|/g, payload.text);
 
       console.log("Posting to clubhouse: " + payload.text);
       request.post(process.env.SLACK_HOOK_URL, {
