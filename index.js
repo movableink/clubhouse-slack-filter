@@ -3,6 +3,7 @@ var request = require('request');
 
 var messageMatch = process.env.CLUBHOUSE_MESSAGE_REGEX || ".*";
 var embellishment = process.env.EMBELLISHMENT || "|MESSAGE|";
+var passthroughUrl = process.env.PASSTHROUGH_URL;
 
 function matchesMessage(msg) {
   return msg.match(messageMatch);
@@ -25,6 +26,15 @@ var server = http.createServer(function(req, res) {
       res.writeHead(500, {});
       res.end("NO");
       return;
+    }
+
+    // Send to a secondary filter
+    if(passthroughUrl) {
+      request.post(passthroughUrl, { body: body }, function(err) {
+        if(err) {
+          console.log(err);
+        }
+      });
     }
 
     var payload = JSON.parse(body);
