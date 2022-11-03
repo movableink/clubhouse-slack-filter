@@ -1,0 +1,36 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    mi-argocd-image-updater: image-parameter
+  labels:
+    app: example-app
+  name: example-app
+  namespace: default
+spec:
+  selector:
+    matchLabels:
+      app: example-app
+  template:
+    metadata:
+      annotations:
+        prometheus.io/scrape: "true"
+      labels:
+        app: example-app
+    spec:
+      containers:
+      - image: 000000000000.dkr.ecr.us-east-1.amazonaws.com/movableink/example-app:1.3.0
+        imagePullPolicy: IfNotPresent
+        name: thumbs-up
+        ports:
+        - containerPort: 3048
+          name: http
+          protocol: TCP
+        resources:
+          limits:
+            cpu: 100m
+            memory: 150Mi
+          requests:
+            cpu: 50m
+            memory: 100M
+      serviceAccountName: example-app
